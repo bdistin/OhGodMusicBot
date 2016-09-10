@@ -1,3 +1,5 @@
 {
     "d_token" : "YOUR DISCORD APP TOKEN",
+	"adminID" : "YOUR DISCORD USER ID",
+    "prefix" : "++"
 }

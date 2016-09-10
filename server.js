@@ -2,7 +2,9 @@ const Discord = require('discord.js');
 const yt = require('ytdl-core');
 const tokens = require('./tokens.json');
 const client = new Discord.Client();
+
 let queue = {};
+
 client.on('message', msg => {
 	if (msg.content.startsWith(tokens.prefix + 'play')) {
 		if (queue[msg.guild.id].playing) return msg.channel.sendMessage('Already Playing');
@@ -10,6 +12,7 @@ client.on('message', msg => {
 		if (!client.voiceConnections.exists('channel', msg.member.voiceChannel)) return msg.channel.sendMessage('Join me to a voice channel with ++join first');
 		let myVoiceConnection = client.voiceConnections.find('channel', msg.member.voiceChannel);
 		let dispatcher;
+
 		console.log(queue);
 		(function play(song) {
 			queue[msg.guild.id].playing = true;
@@ -34,14 +37,14 @@ client.on('message', msg => {
 					dispatcher.end();
 					msg.channel.sendMessage('skipped');
 				} else if (m.content.startsWith('volume+')){
-					if (Math.round(dispatcher.volume*100) >= 100) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*100)}%`);
+					if (Math.round(dispatcher.volume*50) >= 100) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
 					const amount = m.content.split('+').length-1;
-					dispatcher.setVolume(Math.max((dispatcher.volume*100 + 4*amount)/100,1));
+					dispatcher.setVolume(Math.min((dispatcher.volume*50 + (4*amount))/50,2));
 					msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
 				} else if (m.content.startsWith('volume-')){
-					if (Math.round(dispatcher.volume*100) <= 0) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*100)}%`);
+					if (Math.round(dispatcher.volume*50) <= 0) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
 					const amount = m.content.split('-').length-1;
-					dispatcher.setVolume(Math.min((dispatcher.volume*100 - 4*amount)/100,0));
+					dispatcher.setVolume(Math.max((dispatcher.volume*50 - (4*amount))/50,0));
 					msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
 				}
 			});
@@ -61,6 +64,7 @@ client.on('message', msg => {
 				return;
 			});
 		})(queue[msg.guild.id].songs[0]);
+
 	} else if (msg.content.startsWith(tokens.prefix + 'join')) {
 		const voiceChannel = msg.member.voiceChannel;
 		if (!voiceChannel || voiceChannel.type !== 'voice') return msg.reply('I couldn\'t connect to your voice channel...');
@@ -78,23 +82,15 @@ client.on('message', msg => {
 			msg.channel.sendMessage(`added **${info.title}** to the queue`);
 		});
 	} else if (msg.content.startsWith(tokens.prefix + 'help')) {
-		let tosend = ['```xl',
-		'++join : "Join Voice channel of msg sender"',
-		'++add : "Add a valid youtube link to the queue"',
-		'++play : "Play the music queue if already joined to a voice channel',
-		'++pause : "pauses the music, only available while play command is running."',
-		'++resume : "resumes the music, only available while play command is running."',
-		'++skip : "skips the playing song, only available while play command is running."',
-		'volume+(+++) : "increases volume by 2%/+, only available while play command is running."',
-		'volume+(---) : "decreases volume by 2%/-, only available while play command is running."',
-		'notes : "commands are case sensitive, because I want to be a lazy ass on this bot."',
-		'```'];
+		let tosend = ['```xl', '++join : "Join Voice channel of msg sender"',	'++add : "Add a valid youtube link to the queue"', '++play : "Play the music queue if already joined to a voice channel', '++pause : "pauses the music, only available while play command is running."',	'++resume : "resumes the music, only available while play command is running."', '++skip : "skips the playing song, only available while play command is running."',	'volume+(+++) : "increases volume by 2%/+, only available while play command is running."',	'volume+(---) : "decreases volume by 2%/-, only available while play command is running."',	'notes : "commands are case sensitive, because I want to be a lazy ass on this bot."',	'```'];
 		msg.channel.sendMessage(tosend.join('\n'));
 	} else if (msg.content.startsWith(tokens.prefix + 'reboot')) {
 		if (msg.author.id == tokens.adminID) process.exit();
 	}
 });
+
 client.login(tokens.d_token);
+
 client.on('ready', () => {
 	console.log('ready!');
 });
