@@ -7,8 +7,8 @@ let queue = {};
 
 const commands = {
 	'play': (msg) => {
-		if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage('Add some songs to the queue first with ++add');
-		if (!client.voiceConnections.exists('channel', msg.member.voiceChannel)) return msg.channel.sendMessage('Join me to a voice channel with ++join first');
+		if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage(`Add some songs to the queue first with ${tokens.prefix}add`);
+		if (!client.voiceConnections.exists('channel', msg.member.voiceChannel)) return msg.channel.sendMessage(`Join me to a voice channel with ${tokens.prefix}join first`);
 		if (queue[msg.guild.id].playing) return msg.channel.sendMessage('Already Playing');
 		let myVoiceConnection = client.voiceConnections.find('channel', msg.member.voiceChannel);
 		let dispatcher;
@@ -70,7 +70,7 @@ const commands = {
 		});
 	},
 	'queue': (msg) => {
-		if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage('Add some songs to the queue first with ++add');
+		if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage(`Add some songs to the queue first with ${tokens.prefix}add`);
 		let tosend = [];
 		queue[msg.guild.id].songs.forEach((song, i) => { tosend.push(`${i+1}. ${song.title} - Requested by: ${song.requester}`);});
 		msg.channel.sendMessage(`__**${msg.guild.name}'s Music Queue:**__ Currently **${tosend.length}** songs queued ${(tosend.length > 15 ? '*[Only next 15 shown]*' : '')}\n\`\`\`${tosend.slice(0,15).join('\n')}\`\`\``);
