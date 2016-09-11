@@ -53,8 +53,7 @@ const commands = {
 				return msg.channel.sendMessage('error: ' + err).then(() => {
 					collector.stop();
 					queue[msg.guild.id].songs.shift();
-					queue[msg.guild.id].playing = false;
-					msg.member.voiceChannel.leave();
+					play(queue[msg.guild.id].songs[0]);
 				});
 			});
 		})(queue[msg.guild.id].songs[0]);
