@@ -17,7 +17,7 @@ const commands = {
 			console.log(song);
 			if (song === undefined) return msg.channel.sendMessage('Queue is empty').then(() => {
 				queue[msg.guild.id].playing = false;
-				myVoiceConnection.leave();
+				msg.member.voiceChannel.leave();
 			});
 			msg.channel.sendMessage(`Playing: **${song.title}** as requested by: **${song.requester}**`);
 			dispatcher = myVoiceConnection.playStream(yt(song.url, { audioonly: true }));
@@ -54,7 +54,7 @@ const commands = {
 					collector.stop();
 					queue[msg.guild.id].songs.shift();
 					queue[msg.guild.id].playing = false;
-					myVoiceConnection.leave();
+					msg.member.voiceChannel.leave();
 				});
 			});
 		})(queue[msg.guild.id].songs[0]);
