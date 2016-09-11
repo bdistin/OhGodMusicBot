@@ -22,7 +22,7 @@ const commands = {
 				msg.member.voiceChannel.leave();
 			});
 			msg.channel.sendMessage(`Playing: **${song.title}** as requested by: **${song.requester}**`);
-			dispatcher = myVoiceConnection.playStream(yt(song.url, { audioonly: true }));
+			dispatcher = myVoiceConnection.playStream(yt(song.url, { audioonly: true }), { passes : 1 }); //You can increase passes to reduce packetloss, if you have the spare bandwidth
 			let collector = msg.channel.createCollector(m => m);
 			collector.on('message', m => {
 				if (m.content.startsWith(tokens.prefix + 'pause')) {
