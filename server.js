@@ -3,7 +3,6 @@ const yt = require('ytdl-core');
 const tokens = require('./tokens.json');
 const client = new Discord.Client();
 let queue = {};
-
 const commands = {
 	'play': (msg) => {
 		if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage('Add some songs to the queue first with ++add');
@@ -18,7 +17,7 @@ const commands = {
 			console.log(song);
 			if (song === undefined) return msg.channel.sendMessage('Queue is empty').then(() => {
 				queue[msg.guild.id].playing = false;
-				msg.member.voiceChannel.leave();
+				myVoiceConnection.leave();
 			});
 			msg.channel.sendMessage(`Playing: **${song.title}** as requested by: **${song.requester}**`);
 			dispatcher = myVoiceConnection.playStream(yt(song.url, { audioonly: true }));
@@ -50,6 +49,14 @@ const commands = {
 				queue[msg.guild.id].songs.shift();
 				play(queue[msg.guild.id].songs[0]);
 			});
+			dispatcher.on('error', (err) => {
+				return msg.channel.sendMessage('error: ' + err).then(() => {
+					collector.stop();
+					queue[msg.guild.id].songs.shift();
+					queue[msg.guild.id].playing = false;
+					myVoiceConnection.leave();
+				});
+			});
 		})(queue[msg.guild.id].songs[0]);
 	},
 	'join': (msg) => {
@@ -61,11 +68,7 @@ const commands = {
 		let url = msg.content.slice(6);
 		yt.getInfo(url, (err, info) => {
 			if(err) return msg.channel.sendMessage('Invalid YouTube Link: ' + err);
-			if (!queue.hasOwnProperty(msg.guild.id)) {
-				queue[msg.guild.id] = {};
-				queue[msg.guild.id].playing = false;
-				queue[msg.guild.id].songs = [];
-			}
+			if (!queue.hasOwnProperty(msg.guild.id)) queue[msg.guild.id] = {}, queue[msg.guild.id].playing = false, queue[msg.guild.id].songs = [];
 			queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username});
 			msg.channel.sendMessage(`added **${info.title}** to the queue`);
 		});
