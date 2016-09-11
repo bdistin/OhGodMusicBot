@@ -2,7 +2,9 @@ const Discord = require('discord.js');
 const yt = require('ytdl-core');
 const tokens = require('./tokens.json');
 const client = new Discord.Client();
+
 let queue = {};
+
 const commands = {
 	'play': (msg) => {
 		if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage('Add some songs to the queue first with ++add');
@@ -31,13 +33,11 @@ const commands = {
 					msg.channel.sendMessage('skipped').then(() => {dispatcher.end();});
 				} else if (m.content.startsWith('volume+')){
 					if (Math.round(dispatcher.volume*50) >= 100) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
-					const amount = m.content.split('+').length-1;
-					dispatcher.setVolume(Math.min((dispatcher.volume*50 + (2*amount))/50,2));
+					dispatcher.setVolume(Math.min((dispatcher.volume*50 + (2*(m.content.split('+').length-1)))/50,2));
 					msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
 				} else if (m.content.startsWith('volume-')){
 					if (Math.round(dispatcher.volume*50) <= 0) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
-					const amount = m.content.split('-').length-1;
-					dispatcher.setVolume(Math.max((dispatcher.volume*50 - (2*amount))/50,0));
+					dispatcher.setVolume(Math.max((dispatcher.volume*50 - (2*(m.content.split('-').length-1)))/50,0));
 					msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
 				}
 			});
