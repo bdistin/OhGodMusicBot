@@ -24,14 +24,11 @@ const commands = {
 			let collector = msg.channel.createCollector(m => m);
 			collector.on('message', m => {
 				if (m.content.startsWith(tokens.prefix + 'pause')) {
-					dispatcher.pause();
-					msg.channel.sendMessage('paused');
+					msg.channel.sendMessage('paused').then(() => {dispatcher.pause();});
 				} else if (m.content.startsWith(tokens.prefix + 'resume')){
-					dispatcher.resume();
-					msg.channel.sendMessage('resumed');
+					msg.channel.sendMessage('resumed').then(() => {dispatcher.resume();});
 				} else if (m.content.startsWith(tokens.prefix + 'skip')){
-					dispatcher.end();
-					msg.channel.sendMessage('skipped');
+					msg.channel.sendMessage('skipped').then(() => {dispatcher.end();});
 				} else if (m.content.startsWith('volume+')){
 					if (Math.round(dispatcher.volume*50) >= 100) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
 					const amount = m.content.split('+').length-1;
