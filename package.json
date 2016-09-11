@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "discord.js" : "github:hydrabolt/discord.js#indev",
-	"ytdl-core" :  "github:fent/node-ytdl-core#master",
+	"ytdl-core" :  "github:fent/node-ytdl-core#master"
   },
   "author": "BDISTIN",
   "license": "MIT"

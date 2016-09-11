@@ -2,28 +2,25 @@ const Discord = require('discord.js');
 const yt = require('ytdl-core');
 const tokens = require('./tokens.json');
 const client = new Discord.Client();
-
 let queue = {};
 
-client.on('message', msg => {
-	if (msg.content.startsWith(tokens.prefix + 'play')) {
-		if (queue[msg.guild.id].playing) return msg.channel.sendMessage('Already Playing');
+const commands = {
+	'play': (msg) => {
 		if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage('Add some songs to the queue first with ++add');
 		if (!client.voiceConnections.exists('channel', msg.member.voiceChannel)) return msg.channel.sendMessage('Join me to a voice channel with ++join first');
+		if (queue[msg.guild.id].playing) return msg.channel.sendMessage('Already Playing');
 		let myVoiceConnection = client.voiceConnections.find('channel', msg.member.voiceChannel);
 		let dispatcher;
+		queue[msg.guild.id].playing = true;
 
 		console.log(queue);
 		(function play(song) {
-			queue[msg.guild.id].playing = true;
 			console.log(song);
-			if (song === undefined) {
-				msg.channel.sendMessage('Queue is empty');
+			if (song === undefined) return msg.channel.sendMessage('Queue is empty').then(() => {
 				queue[msg.guild.id].playing = false;
 				msg.member.voiceChannel.leave();
-				return;
-			}
-			msg.channel.sendMessage(`Playing: **${song.title}**`);
+			});
+			msg.channel.sendMessage(`Playing: **${song.title}** as requested by: **${song.requester}**`);
 			dispatcher = myVoiceConnection.playStream(yt(song.url, { audioonly: true }));
 			let collector = msg.channel.createCollector(m => m);
 			collector.on('message', m => {
@@ -39,37 +36,28 @@ client.on('message', msg => {
 				} else if (m.content.startsWith('volume+')){
 					if (Math.round(dispatcher.volume*50) >= 100) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
 					const amount = m.content.split('+').length-1;
-					dispatcher.setVolume(Math.min((dispatcher.volume*50 + (4*amount))/50,2));
+					dispatcher.setVolume(Math.min((dispatcher.volume*50 + (2*amount))/50,2));
 					msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
 				} else if (m.content.startsWith('volume-')){
 					if (Math.round(dispatcher.volume*50) <= 0) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
 					const amount = m.content.split('-').length-1;
-					dispatcher.setVolume(Math.max((dispatcher.volume*50 - (4*amount))/50,0));
+					dispatcher.setVolume(Math.max((dispatcher.volume*50 - (2*amount))/50,0));
 					msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
 				}
 			});
 			dispatcher.on('end', () => {
-				setTimeout(()=>{
-					collector.stop();
-					queue[msg.guild.id].songs.shift();
-					play(queue[msg.guild.id].songs[0]);
-				}, 1000);
-			});
-			dispatcher.on('error', (err) => {
 				collector.stop();
 				queue[msg.guild.id].songs.shift();
-				queue[msg.guild.id].playing = false;
-				msg.channel.sendMessage('error: ' + err);
-				msg.member.voiceChannel.leave();
-				return;
+				play(queue[msg.guild.id].songs[0]);
 			});
 		})(queue[msg.guild.id].songs[0]);
-
-	} else if (msg.content.startsWith(tokens.prefix + 'join')) {
+	},
+	'join': (msg) => {
 		const voiceChannel = msg.member.voiceChannel;
 		if (!voiceChannel || voiceChannel.type !== 'voice') return msg.reply('I couldn\'t connect to your voice channel...');
 		voiceChannel.join();
-	} else if (msg.content.startsWith(tokens.prefix + 'add')) {
+	},
+	'add': (msg) => {
 		let url = msg.content.slice(6);
 		yt.getInfo(url, (err, info) => {
 			if(err) return msg.channel.sendMessage('Invalid YouTube Link: ' + err);
@@ -78,19 +66,32 @@ client.on('message', msg => {
 				queue[msg.guild.id].playing = false;
 				queue[msg.guild.id].songs = [];
 			}
-			queue[msg.guild.id].songs.push({url: url, title: info.title});
+			queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username});
 			msg.channel.sendMessage(`added **${info.title}** to the queue`);
 		});
-	} else if (msg.content.startsWith(tokens.prefix + 'help')) {
-		let tosend = ['```xl', '++join : "Join Voice channel of msg sender"',	'++add : "Add a valid youtube link to the queue"', '++play : "Play the music queue if already joined to a voice channel', '++pause : "pauses the music, only available while play command is running."',	'++resume : "resumes the music, only available while play command is running."', '++skip : "skips the playing song, only available while play command is running."',	'volume+(+++) : "increases volume by 2%/+, only available while play command is running."',	'volume+(---) : "decreases volume by 2%/-, only available while play command is running."',	'notes : "commands are case sensitive, because I want to be a lazy ass on this bot."',	'```'];
+	},
+	'queue': (msg) => {
+		if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage('Add some songs to the queue first with ++add');
+		let tosend = [];
+		queue[msg.guild.id].songs.forEach((song, i) => { tosend.push(`${i+1}. ${song.title} - Requested by: ${song.requester}`);});
+		msg.channel.sendMessage(`__**${msg.guild.name}'s Music Queue:**__ Currently ${tosend.length} songs queued ${(tosend.length > 15 ? '*[Only next 15 shown]*' : '')}\n\`\`\`${tosend.slice(0,15).join('\n')}\`\`\``);
+	},
+	'help': (msg) => {
+		let tosend = ['```xl', tokens.prefix + 'join : "Join Voice channel of msg sender"',	tokens.prefix + 'add : "Add a valid youtube link to the queue"', tokens.prefix + 'queue : "Shows the current queue, up to 15 songs shown."', tokens.prefix + 'play : "Play the music queue if already joined to a voice channel"', '', 'the following commands only function while the play command is running:'.toUpperCase(), tokens.prefix + 'pause : "pauses the music"',	tokens.prefix + 'resume : "resumes the music"', tokens.prefix + 'skip : "skips the playing song"',	'volume+(+++) : "increases volume by 2%/+"',	'volume+(---) : "decreases volume by 2%/-"',	'```'];
 		msg.channel.sendMessage(tosend.join('\n'));
-	} else if (msg.content.startsWith(tokens.prefix + 'reboot')) {
-		if (msg.author.id == tokens.adminID) process.exit();
+	},
+	'reboot': (msg) => {
+		if (msg.author.id == tokens.adminID) process.exit(); //Requires a node module like Forever to work.
 	}
-});
-
-client.login(tokens.d_token);
+};
 
 client.on('ready', () => {
 	console.log('ready!');
 });
+
+client.on('message', msg => {
+	if (!msg.content.startsWith(tokens.prefix)) return;
+	if (commands.hasOwnProperty(msg.content.toLowerCase().slice(tokens.prefix.length).split(' ')[0])) commands[msg.content.toLowerCase().slice(tokens.prefix.length).split(' ')[0]](msg);
+});
+
+client.login(tokens.d_token);
