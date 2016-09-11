@@ -22,7 +22,7 @@ const commands = {
 				msg.member.voiceChannel.leave();
 			});
 			msg.channel.sendMessage(`Playing: **${song.title}** as requested by: **${song.requester}**`);
-			dispatcher = myVoiceConnection.playStream(yt(song.url, { audioonly: true }), { passes : 1 }); //You can increase passes to reduce packetloss, if you have the spare bandwidth
+			dispatcher = myVoiceConnection.playStream(yt(song.url, { audioonly: true }), { passes : 1 }); //You can increase passes to reduce packetloss, if you have the spare bandwidth; should be lossless with 3-5 passes but it increase your upload by 3-5 times
 			let collector = msg.channel.createCollector(m => m);
 			collector.on('message', m => {
 				if (m.content.startsWith(tokens.prefix + 'pause')) {
