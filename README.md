@@ -53,7 +53,7 @@ Download FFMPEG from [this website](https://ffmpeg.zeranoe.com/builds/). Make su
 
 Extract the files to the root of your harddrive, and rename the folder to `ffmpeg`. 
 
-**Then add FFMPEG to your Path variable: **
+**Then add FFMPEG to your Path variable:**
 
 1. `windows key + x`
 2. go to system
