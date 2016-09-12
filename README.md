@@ -77,6 +77,8 @@ Next you'll need to download the bot and configure it.
 Download the master branch and put the unzipped files in a new folder on your computer.
 Next rename .json.example to .json and enter the correct information.
 
+For obtaining a Discord Bot token, please see [this page.](https://discordapp.com/developers/docs/intro)
+
 Before running the bot you need to install the dependencies.
 In the folder you put the files in, Shift+Right click and select open command window here.
 In the command prompt type `npm install`.
