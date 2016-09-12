@@ -84,13 +84,13 @@ In the folder you put the files in, Shift+Right click and select open command wi
 In the command prompt type `npm install`.
 
 The bot should now be ready!
-Open a command prompt like above and type npm start to start the bot and see if it works.
+Open a command prompt like above and type `npm start` to start the bot and see if it works.
 
 ###Install dependencies
 
 **Windows**
 
-Shift-RightClick in the folder that you downloaded and select Open command window here. Then type npm install and hit Enter.
+Shift-RightClick in the folder that you downloaded and select Open command window here. Then type `npm install` and hit Enter.
 
 **Linux**
 
