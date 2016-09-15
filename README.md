@@ -75,7 +75,7 @@ Extract the files to the root of your harddrive, and rename the folder to `ffmpe
 
 Next you'll need to download the bot and configure it.
 Download the master branch and put the unzipped files in a new folder on your computer.
-Next rename .json.example to .json and enter the correct information.
+Next rename .json.example to .json and enter the correct information. *Note: You will have to remove any and all comments from the .json.example file, as they are not supported in json. They are there to guide you as you decide how you want to configure your bot*
 
 For obtaining a Discord Bot token, please see [this page.](https://discordapp.com/developers/docs/intro)
 
