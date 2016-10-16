@@ -11,7 +11,7 @@ exports.run = (client, msg) => {
   console.log(client.queue);
   (function play(song) {
     console.log(song);
-    if (song === undefined) return msg.channel.sendMessage(":speaker: Queue is empty").then(() => {
+    if (song === undefined) return msg.channel.sendMessage(":stop_button: Queue is empty").then(() => {
       client.queue[msg.guild.id].playing = false;
       msg.member.voiceChannel.leave();
     });
@@ -28,7 +28,7 @@ exports.run = (client, msg) => {
       } else if (m.content.startsWith("volume+")){
         if (Math.round(dispatcher.volume*50) >= 100) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
         dispatcher.setVolume(Math.min((dispatcher.volume*50 + (2*(m.content.split("+").length-1)))/50,2));
-        msg.channel.sendMessage(`:loud_sound: Volume: ${Math.round(dispatcher.volume*50)}%`);
+        msg.channel.sendMessage(`${dispatcher.volume === 2 ? ":loud_sound:": ":loud_sound:"} Volume: ${Math.round(dispatcher.volume*50)}%`);
       } else if (m.content.startsWith("volume-")){
         if (Math.round(dispatcher.volume*50) <= 0) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
         dispatcher.setVolume(Math.max((dispatcher.volume*50 - (2*(m.content.split("-").length-1)))/50,0));
