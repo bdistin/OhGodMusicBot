@@ -11,30 +11,30 @@ exports.run = (client, msg) => {
   console.log(client.queue);
   (function play(song) {
     console.log(song);
-    if (song === undefined) return msg.channel.sendMessage("Queue is empty").then(() => {
+    if (song === undefined) return msg.channel.sendMessage(":speaker: Queue is empty").then(() => {
       client.queue[msg.guild.id].playing = false;
       msg.member.voiceChannel.leave();
     });
-    msg.channel.sendMessage(`Playing: **${song.title}** as requested by: **${song.requester}**`);
+    msg.channel.sendMessage(`:headphones:Playing: **${song.title}** as requested by: **${song.requester}**`);
     dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes : OhGodConfig.passes });
     let collector = msg.channel.createCollector(m => m);
     collector.on("message", m => {
       if (m.content.startsWith(client.config.prefix + "pause")) {
-        msg.channel.sendMessage("paused").then(() => {dispatcher.pause();});
+        msg.channel.sendMessage(":pause_button: Paused").then(() => {dispatcher.pause();});
       } else if (m.content.startsWith(client.config.prefix + "resume")){
-        msg.channel.sendMessage("resumed").then(() => {dispatcher.resume();});
+        msg.channel.sendMessage(":arrow_forward: Resumed").then(() => {dispatcher.resume();});
       } else if (m.content.startsWith(client.config.prefix + "skip")){
-        msg.channel.sendMessage("skipped").then(() => {dispatcher.end();});
+        msg.channel.sendMessage(":track_next: Skipped").then(() => {dispatcher.end();});
       } else if (m.content.startsWith("volume+")){
         if (Math.round(dispatcher.volume*50) >= 100) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
         dispatcher.setVolume(Math.min((dispatcher.volume*50 + (2*(m.content.split("+").length-1)))/50,2));
-        msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
+        msg.channel.sendMessage(`:loud_sound: Volume: ${Math.round(dispatcher.volume*50)}%`);
       } else if (m.content.startsWith("volume-")){
         if (Math.round(dispatcher.volume*50) <= 0) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
         dispatcher.setVolume(Math.max((dispatcher.volume*50 - (2*(m.content.split("-").length-1)))/50,0));
-        msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
+        msg.channel.sendMessage(`:sound: Volume: ${Math.round(dispatcher.volume*50)}%`);
       } else if (m.content.startsWith(client.config.prefix + "time")){
-        msg.channel.sendMessage(`time: ${Math.floor(dispatcher.time / 60000)}:${Math.floor((dispatcher.time % 60000)/1000) <10 ? "0"+Math.floor((dispatcher.time % 60000)/1000) : Math.floor((dispatcher.time % 60000)/1000)}`);
+        msg.channel.sendMessage(`:clock:Time: ${Math.floor(dispatcher.time / 60000)}:${Math.floor((dispatcher.time % 60000)/1000) <10 ? "0"+Math.floor((dispatcher.time % 60000)/1000) : Math.floor((dispatcher.time % 60000)/1000)}`);
       }
     });
     dispatcher.on("end", () => {

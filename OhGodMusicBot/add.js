@@ -6,7 +6,7 @@ exports.run = (client, msg, [song]) => {
     if(err) return msg.channel.sendMessage("Invalid YouTube Link: " + err);
     if (!client.queue.hasOwnProperty(msg.guild.id)) client.queue[msg.guild.id] = {}, client.queue[msg.guild.id].playing = false, client.queue[msg.guild.id].songs = [];
     client.queue[msg.guild.id].songs.push({url: song, title: info.title, requester: msg.author.username});
-    msg.channel.sendMessage(`added **${info.title}** to the queue`);
+    msg.channel.sendMessage(`:musical_note: Added **${info.title}** to the queue :notes:`);
   });
 };
 
