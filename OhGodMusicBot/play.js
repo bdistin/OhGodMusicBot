@@ -1,4 +1,5 @@
 const yt = require("ytdl-core");
+const OhGodConfig = require("./OhGodConfig.json");
 
 exports.run = (client, msg) => {
   if (client.queue[msg.guild.id] === undefined) return msg.channel.sendMessage(`Add some songs to the queue first with ${client.config.prefix}add`);
@@ -15,7 +16,7 @@ exports.run = (client, msg) => {
       msg.member.voiceChannel.leave();
     });
     msg.channel.sendMessage(`Playing: **${song.title}** as requested by: **${song.requester}**`);
-    dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes : client.config.passes });
+    dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes : OhGodConfig.passes });
     let collector = msg.channel.createCollector(m => m);
     collector.on("message", m => {
       if (m.content.startsWith(client.config.prefix + "pause")) {
