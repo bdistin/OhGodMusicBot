@@ -10,10 +10,10 @@ exports.run = (client, msg) => {
 
 exports.conf = {
   enabled: true,
-  guildOnly: false,
+  guildOnly: true,
   aliases: [],
   permLevel: 0,
-  botPerms: [],
+  botPerms: ["CONNECT"],
   requiredFuncs: []
 };
 

@@ -26,13 +26,13 @@ exports.run = (client, msg) => {
       } else if (m.content.startsWith(client.config.prefix + "skip")){
         msg.channel.sendMessage(":track_next: Skipped").then(() => {dispatcher.end();});
       } else if (m.content.startsWith("volume+")){
-        if (Math.round(dispatcher.volume*50) >= 100) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
+        if (Math.round(dispatcher.volume*50) >= 100) return msg.channel.sendMessage(`:loudspeaker: Volume: ${Math.round(dispatcher.volume*50)}%`);
         dispatcher.setVolume(Math.min((dispatcher.volume*50 + (2*(m.content.split("+").length-1)))/50,2));
-        msg.channel.sendMessage(`${dispatcher.volume === 2 ? ":loud_sound:": ":loud_sound:"} Volume: ${Math.round(dispatcher.volume*50)}%`);
+        msg.channel.sendMessage(`${dispatcher.volume === 2 ? ":loudspeaker:": ":loud_sound:"} Volume: ${Math.round(dispatcher.volume*50)}%`);
       } else if (m.content.startsWith("volume-")){
-        if (Math.round(dispatcher.volume*50) <= 0) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
+        if (Math.round(dispatcher.volume*50) <= 0) return msg.channel.sendMessage(`:mute: Volume: ${Math.round(dispatcher.volume*50)}%`);
         dispatcher.setVolume(Math.max((dispatcher.volume*50 - (2*(m.content.split("-").length-1)))/50,0));
-        msg.channel.sendMessage(`:sound: Volume: ${Math.round(dispatcher.volume*50)}%`);
+        msg.channel.sendMessage(`${dispatcher.volume === 0 ? ":mute:": ":sound:"} Volume: ${Math.round(dispatcher.volume*50)}%`);
       } else if (m.content.startsWith(client.config.prefix + "time")){
         msg.channel.sendMessage(`:clock:Time: ${Math.floor(dispatcher.time / 60000)}:${Math.floor((dispatcher.time % 60000)/1000) <10 ? "0"+Math.floor((dispatcher.time % 60000)/1000) : Math.floor((dispatcher.time % 60000)/1000)}`);
       }
@@ -54,10 +54,10 @@ exports.run = (client, msg) => {
 
 exports.conf = {
   enabled: true,
-  guildOnly: false,
+  guildOnly: true,
   aliases: [],
   permLevel: 0,
-  botPerms: [],
+  botPerms: ["SPEAK"],
   requiredFuncs: []
 };
 

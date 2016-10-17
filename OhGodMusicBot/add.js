@@ -12,7 +12,7 @@ exports.run = (client, msg, [song]) => {
 
 exports.conf = {
   enabled: true,
-  guildOnly: false,
+  guildOnly: true,
   aliases: [],
   permLevel: 0,
   botPerms: [],
