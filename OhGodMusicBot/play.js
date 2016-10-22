@@ -1,5 +1,6 @@
 const yt = require("ytdl-core");
 const OhGodConfig = require("./OhGodConfig.json");
+require("node-opus");
 
 exports.run = (client, msg) => {
   if (client.queue[msg.guild.id] === undefined) return msg.channel.sendMessage(`Add some songs to the queue first with ${client.config.prefix}add`);
