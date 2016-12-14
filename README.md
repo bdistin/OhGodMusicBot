@@ -1,35 +1,9 @@
 # OhGodMusicBot
-A v9 Discord.JS music bot in 100 lines or less
+A v10 Discord.JS music bot in 100 lines or less
 
 ##Installation (Windows)
 
 This section is for running the bot locally on Windows. If you're on Mac it should be similar. I'll assume Linux users can figure it out.
-
-###Download Python 2.7.X
-
-Go to the [downloads page](https://www.python.org/downloads/) on python.org and get the latest 2.7.X installer.
-
-###Install Python 2.7.X
-
-Open the installer that you downloaded. Make sure Install for all users is selected, then continue.
-Enable all of the options. Most importantly the "Add python.exe to Path" one:
-![](http://puu.sh/r8IGz/da533fd0b7.png)
-
-Enable "Add python.exe to Path"
-Then install it and close the installer
-
-###Download Visual Studio
-
-Next we need to download Visual Studio because it has a C++ compiler.
-Go to the [Microsoft Visual Studio website](https://www.visualstudio.com/en-us/visual-studio-homepage-vs.aspx) and click Download Community 2015.
-
-###Install Visual Studio
-
-Open vs_community_ENU.exe
-Check only the Common Tools for Visual C++ 2015 box like so:
-![](http://puu.sh/r8ISY/7ef354ac53.png)
-
-Now install. This will take a long time.
 
 ###Download Node.js
 
@@ -40,6 +14,10 @@ Download [Node.js 6.X from the website](https://nodejs.org/en/).
 
 Open the Node.js Setup.
 In the options, make sure `Node.js runtime` `npm package manager` and `Add to PATH` are enabled. After that install Node.js.
+
+###Install Windows-Build-Tools
+
+Open up a windows powershell and run `npm i -g windows-build-tools`. This will take a while as it will download and install both python 2.7 and c++ build tools, so you can run node-gyp builds.
 
 ###Download Git
 
