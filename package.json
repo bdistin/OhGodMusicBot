@@ -8,9 +8,10 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "discord.js" : "github:hydrabolt/discord.js#indev",
+    	"discord.js" : "github:hydrabolt/discord.js#indev-prism",
+	"prism-media" : "github:hydrabolt/prism-media", 
 	"ytdl-core" :  "github:fent/node-ytdl-core#master",
-  "node-opus" : "^0.2.1"
+  	"node-opus" : "^0.2.1"
   },
   "author": "BDISTIN",
   "license": "MIT"
