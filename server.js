@@ -7,7 +7,7 @@ let broadcasts = new Discord.Collection();
 
 const commands = {
 	'broadcast': (msg) => {
-		join(msg).then(() => {
+		msg.member.voiceChannel.join().then(() => {
 			if (msg.guild.broadcast) return msg.reply('You are already broadcasting...');
 			broadcasts.set(msg.guild.id, {stream: client.createVoiceBroadcast(),listeners: new Discord.Collection(),guild: msg.guild,queue: {playing: false, songs: []}});
 			let broadcast = msg.guild.broadcast = broadcasts.get(msg.guild.id);
@@ -36,7 +36,7 @@ const commands = {
 				if (!isNaN(parseInt(collected.first().content.toLowerCase())) && parseInt(collected.first().content.toLowerCase()) < broadcasts.size) broadcast = msg.guild.broadcast = broadcasts.get(broadcastsList[parseInt(collected.first().content.toLowerCase())].guildID);
 				else if (collected.first().content.toLowerCase() === 'random') broadcast = msg.guild.broadcast = broadcasts.random();
 				else return msg.channel.sendMessage('Unknown broadcast...');
-				join(msg).then(voiceConnection => {
+				msg.member.voiceChannel.join().then(voiceConnection => {
 					voiceConnection.playBroadcast(broadcast.stream);
 					broadcast.listeners.set(msg.guild.id, {voiceChannel: msg.member.voiceChannel,textChannel: msg.channel});
 				}).catch(() => msg.reply('I couldn\'t connect to your voice channel...'));
@@ -66,16 +66,11 @@ const broadcastCommands = {
 		broadcast.queue.playing = true;
 		let dispatcher;
 		(function play(song) {
-			console.log(song);
 			if (song === undefined) return msg.channel.sendMessage('Queue is empty').then(() => { deleteBroadcast(broadcast); });
 			msg.channel.sendMessage(`Playing: **${song.title}** as requested by: **${song.requester}**`);
 			dispatcher = msg.guild.voiceConnection.playBroadcast(broadcast.stream.playStream(yt(song.url, {audioonly: true}), {passes: tokens.passes}));
 			dispatcher.on('end', () => { play(broadcast.queue.current = broadcast.queue.songs.shift()); });
-			dispatcher.on('error', (err) => {
-				return msg.channel.sendMessage('error: ' + err).then(() => {
-					play(broadcast.queue.current = broadcast.queue.songs.shift());
-				});
-			});
+			dispatcher.on('error', (err) => { return msg.channel.sendMessage('error: ' + err).then(() => { play(broadcast.queue.current = broadcast.queue.songs.shift()); }); });
 		})(broadcast.queue.current = broadcast.queue.songs.shift());
 	},
 	'add': (msg, broadcast) => {
@@ -89,19 +84,13 @@ const broadcastCommands = {
 	}
 };
 
-const join = (msg) => {
-	return new Promise((resolve, reject) => msg.member.voiceChannel.join().then(resolve).catch(reject));
-};
-
 const deleteBroadcast = (broadcast) => {
 	broadcast.collector.stop();
 	broadcast.listeners.forEach(l => l.voiceChannel.leave());
 	broadcasts.delete(broadcast.guild.id);
 };
 
-client.on('ready', () => {
-	console.log('ready');
-});
+client.on('ready', () => { console.log('ready'); });
 
 client.on('message', msg => {
 	if (!msg.content.startsWith(tokens.prefix)) return;
