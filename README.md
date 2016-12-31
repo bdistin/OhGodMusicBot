@@ -1,5 +1,5 @@
-# OhGodMusicBot
-A v10 Discord.JS music bot in 100 lines or less
+# OhGodRadioBot
+A v11 Discord.JS Radio bot in ~~100 lines or less~~
 
 ##Installation (Windows)
 
