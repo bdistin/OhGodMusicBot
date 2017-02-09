@@ -44,14 +44,12 @@ const commands = {
 			});
 			dispatcher.on('end', () => {
 				collector.stop();
-				queue[msg.guild.id].songs.shift();
-				play(queue[msg.guild.id].songs[0]);
+				play(queue[msg.guild.id].songs.shift());
 			});
 			dispatcher.on('error', (err) => {
 				return msg.channel.sendMessage('error: ' + err).then(() => {
 					collector.stop();
-					queue[msg.guild.id].songs.shift();
-					play(queue[msg.guild.id].songs[0]);
+					play(queue[msg.guild.id].songs.shift());
 				});
 			});
 		})(queue[msg.guild.id].songs[0]);
