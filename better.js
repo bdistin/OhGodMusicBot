@@ -1,9 +1,8 @@
 const { Client } = require('discord.js');
 const yt = require('ytdl-core');
-const tokens = require('./tokens.json');
-const client = new Client();
+const config = require('./config.json');
 
-let queue = {};
+const client = new Client();
 
 const commands = {
 	'play': (msg) => {
