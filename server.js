@@ -52,7 +52,7 @@ const commands = {
 					play(queue[msg.guild.id].songs.shift());
 				});
 			});
-		})(queue[msg.guild.id].songs[0]);
+		})(queue[msg.guild.id].songs.shift());
 	},
 	'join': (msg) => {
 		return new Promise((resolve, reject) => {
