@@ -1,33 +1,33 @@
 # OhGodMusicBot
 A v10 Discord.JS music bot in 100 lines or less
 
-##Installation (Windows)
+## Installation (Windows)
 
 This section is for running the bot locally on Windows. If you're on Mac it should be similar. I'll assume Linux users can figure it out.
 
-###Download Node.js
+### Download Node.js
 
 Node.js is what will be used to run the bot.
 Download [Node.js 6.X from the website](https://nodejs.org/en/).
 
-###Install Node.js
+### Install Node.js
 
 Open the Node.js Setup.
 In the options, make sure `Node.js runtime` `npm package manager` and `Add to PATH` are enabled. After that install Node.js.
 
-###Install Windows-Build-Tools
+### Install Windows-Build-Tools
 
 Open up a windows powershell and run `npm i -g windows-build-tools`. This will take a while as it will download and install both python 2.7 and c++ build tools, so you can run node-gyp builds.
 
-###Download Git
+### Download Git
 
 And install it. The website is http://git-scm.com and make sure you choose "for command prompt".
 
-###Download FFMPEG
+### Download FFMPEG
 
 Download FFMPEG from [this website](https://ffmpeg.zeranoe.com/builds/). Make sure to find the current **Static Build** for your OS Architecture (32bit/64bit).
 
-###Install & Configure FFMPEG
+### Install & Configure FFMPEG
 
 Extract the files to the root of your harddrive, and rename the folder to `ffmpeg`. 
 
@@ -49,7 +49,7 @@ Extract the files to the root of your harddrive, and rename the folder to `ffmpe
 
 1. add `;c:\ffmpeg\bin` to the end of the field.
 
-###Download and Install OhGodMusicBot
+### Download and Install OhGodMusicBot
 
 Next you'll need to download the bot and configure it.
 Download the master branch and put the unzipped files in a new folder on your computer.
@@ -64,7 +64,7 @@ In the command prompt type `npm install`.
 The bot should now be ready!
 Open a command prompt like above and type `npm start` to start the bot and see if it works.
 
-###Install dependencies
+### Install dependencies
 
 **Windows**
 
@@ -72,4 +72,4 @@ Shift-RightClick in the folder that you downloaded and select Open command windo
 
 **Linux**
 
-cd to where you cloned the GitHub repo and type npm install. This will take a while.
+cd to where you cloned the GitHub repo and type `npm install`. This will take a while.
