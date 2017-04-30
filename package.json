@@ -10,7 +10,8 @@
   "dependencies": {
     "discord.js" : "github:hydrabolt/discord.js#master",
 	"ytdl-core" :  "github:fent/node-ytdl-core#master",
-  "node-opus" : "^0.2.1"
+  "node-opus" : "^0.2.1",
+  "youtube-node" : "^4.2.0"
   },
   "author": "BDISTIN",
   "license": "MIT"

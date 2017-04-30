@@ -2,6 +2,9 @@ const { Client } = require('discord.js');
 const yt = require('ytdl-core');
 const tokens = require('./tokens.json');
 const client = new Client();
+const YouTube = require('youtube-node');
+const youTube = new YouTube();
+youTube.setKey(tokens.yt_token);
 
 let queue = {};
 
@@ -62,15 +65,39 @@ const commands = {
 		});
 	},
 	'add': (msg) => {
-		let url = msg.content.split(' ')[1];
-		if (url == '' || url === undefined) return msg.channel.sendMessage(`You must add a YouTube video url, or id after ${tokens.prefix}add`);
-		yt.getInfo(url, (err, info) => {
-			if(err) return msg.channel.sendMessage('Invalid YouTube Link: ' + err);
-			if (!queue.hasOwnProperty(msg.guild.id)) queue[msg.guild.id] = {}, queue[msg.guild.id].playing = false, queue[msg.guild.id].songs = [];
-			queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username});
-			msg.channel.sendMessage(`added **${info.title}** to the queue`);
-		});
-	},
+            function addFromUrl(url) {
+                msg.channel.sendMessage("*Adding...*");
+                if (url == '' || url === undefined) return msg.channel.sendMessage(`You must add a YouTube video url after ${tokens.prefix}add`);
+                yt.getInfo(url, (err, info) => {
+                    if (err) return msg.channel.sendMessage('Invalid YouTube Link: ' + err);
+                    if (!queue.hasOwnProperty(msg.guild.id)) queue[msg.guild.id] = {}, queue[msg.guild.id].playing = false, queue[msg.guild.id].songs = [];
+                    queue[msg.guild.id].songs.push({
+                        url: url,
+                        title: info.title,
+                        requester: msg.author.username
+                    });
+                    msg.channel.sendMessage(`Added **${info.title}** to the queue`);
+                });
+            }
+            function addFromQuery(query) {
+                youTube.search(query, 2, function(error, result) {
+                    if (error) {
+                        msg.channel.sendMessage('Error:\n' + error);
+                    } else {
+                        let url = `https://www.youtube.com/watch?v=${result.items[0]["id"].videoId}`;
+                        addFromUrl(url);
+                    }
+                });
+            }
+            if (msg.content === `${tokens.prefix}add`) return msg.reply(`You must add a YouTube video url after ${tokens.prefix}add`);
+            let url = msg.content.split(' ')[1];
+            if (url.includes("https://youtube.com/") || url.includes("https://www.youtube.com/") || url.includes("http://youtube.com/") || url.includes("http://www.youtube.com/") || url.includes("https://youtu.be/") || url.includes("https://www.youtu.be/") || url.includes("http://youtu.be/") || url.includes("http://www.youtu.be/")) {
+                addFromUrl(url);
+            } else {
+                let query = msg.content.replace(`${tokens.prefix}add`, '');
+                addFromQuery(query);
+            }
+    	},
 	'queue': (msg) => {
 		if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage(`Add some songs to the queue first with ${tokens.prefix}add`);
 		let tosend = [];
