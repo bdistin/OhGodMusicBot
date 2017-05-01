@@ -1,5 +1,5 @@
 # OhGodMusicBot
-A v10 Discord.JS music bot in 100 lines or less
+A v11.1.0 Discord.JS music bot in 100 lines or less
 
 ## Installation (Windows)
 
