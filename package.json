@@ -1,7 +1,7 @@
 {
   "name": "ohgodmusicbot",
   "version": "1.0.0",
-  "description": "A v11 Discord.JS music bot in 100 lines or less",
+  "description": "A v11.1.0 Discord.JS music bot in 100 lines or less",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
