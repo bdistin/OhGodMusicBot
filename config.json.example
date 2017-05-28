@@ -1,0 +1,7 @@
+{
+	"token" : "YOUR DISCORD APP TOKEN",
+	"owner" : "YOUR DISCORD USER ID",
+	"apiAuth": "notaauthkeydotcat", // dont even try changing this :^)
+	"prefix" : "++",
+	"passes" : 1 //can be increased to reduce packetloss at the expense of upload bandwidth, 4-5 should be lossless at the expense of 4-5x upload
+}
