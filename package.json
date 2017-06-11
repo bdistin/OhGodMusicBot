@@ -10,7 +10,7 @@
   "dependencies": {
     "discord.js" : "11.0.0",
     "ytdl-core" :  "github:fent/node-ytdl-core#master",
-    "node-opus" : "^0.2.1"
+    "node-opus" : "^0.2.1",
     "youtube-node" : "^4.2.0"
   },
   "author": "BDISTIN",
