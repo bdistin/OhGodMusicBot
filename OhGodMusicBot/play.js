@@ -21,7 +21,7 @@ exports.run = (client, msg) => {
 		msg.channel.send(`🎧 Playing: **${song.title}** as requested by: **${song.requester}**`);
 		dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes: OhGodConfig.passes });
 		const collector = msg.channel.createMessageCollector(message => message);
-		collector.on('message', m => { // eslint-disable-line id-length
+		collector.on('collect', m => { // eslint-disable-line id-length
 			if (m.content.startsWith(`${client.config.prefix}pause`)) {
 				return msg.channel.send('⏸ Paused').then(() => { dispatcher.pause(); });
 			} else if (m.content.startsWith(`${client.config.prefix}resume`)) {
