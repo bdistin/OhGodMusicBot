@@ -2,7 +2,7 @@ const yt = require('ytdl-core');
 const OhGodConfig = require('./OhGodConfig.json');
 require('node-opus');
 
-exports.run = (client, msg) => {
+exports.run = async (client, msg) => {
 	if (client.queue[msg.guild.id] === undefined) return msg.channel.send(`Add some songs to the queue first with ${client.config.prefix}add`);
 	if (!msg.guild.voiceConnection) return client.commands.get('join').run(client, msg).then(() => client.commands.get('play').run(client, msg));
 	if (client.queue[msg.guild.id].playing) return msg.channel.send('Already Playing');
