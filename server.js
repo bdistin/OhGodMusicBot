@@ -42,9 +42,16 @@ const commands = {
 					msg.channel.sendMessage(`time: ${Math.floor(dispatcher.time / 60000)}:${Math.floor((dispatcher.time % 60000)/1000) <10 ? '0'+Math.floor((dispatcher.time % 60000)/1000) : Math.floor((dispatcher.time % 60000)/1000)}`);
 				}
 			});
-			dispatcher.on('end', () => {
+			dispatcher.once('end', () => {
 				collector.stop();
-				play(queue[msg.guild.id].songs.shift());
+				if (queue[msg.guild.id].songs.length === 0) {
+          				delete dispatcher;
+        			} else {
+          				setTimeout(() => {
+            					delete dispatcher;
+            					play(queue[msg.guild.id].songs.shift());
+          				}, 200);
+        			}
 			});
 			dispatcher.on('error', (err) => {
 				return msg.channel.sendMessage('error: ' + err).then(() => {
